@@ -1,5 +1,8 @@
+import org.junit.runner.RunWith
+import org.scalatest.junit.JUnitRunner
 import org.scalatest.FunSuite
 
+@RunWith(classOf[JUnitRunner])
 class MainSuite extends FunSuite {
   test("counting an empty collection") {
     assert(Main.count(Map()) == 0)

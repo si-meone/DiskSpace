@@ -23,15 +23,17 @@ From history it's easier dealing with bytes.
 
 Now in scala you can run commands 
 
-scala> import sys.process._
-import sys.process._
+`scala> import sys.process._` 
+ 
+` scala> val result = "ls -al" !`  
+` total 64`  
+` drwxr-xr-x  10 Al  staff   340 May 18 18:00 .`  
+` drwxr-xr-x   3 Al  staff   102 Apr  4 17:58 ..`  
+` -rw-r--r--   1 Al  staff   118 May 17 08:34 Foo.sh`  
+` -rw-r--r--   1 Al  staff  2727 May 17 08:34 Foo.sh.jar`  
+` result: Int = 0`  
 
-scala> val result = "ls -al" !
-total 64
-drwxr-xr-x  10 Al  staff   340 May 18 18:00 .
-drwxr-xr-x   3 Al  staff   102 Apr  4 17:58 ..
--rw-r--r--   1 Al  staff   118 May 17 08:34 Foo.sh
--rw-r--r--   1 Al  staff  2727 May 17 08:34 Foo.sh.jar
-result: Int = 0
+` scala> println(result)` 
 
-scala> println(result)
+
+Sysinternals accept EULA dialog, but /accepteula always works for me.

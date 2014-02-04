@@ -37,3 +37,11 @@ Now in scala you can run commands
 
 
 Sysinternals accept EULA dialog, but /accepteula always works for me.
+
+That leaves disk useage:
+=========================
+on windows 
+fsutil volume diskfree c:
+
+on linux 
+df -h

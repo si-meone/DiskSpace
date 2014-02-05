@@ -57,9 +57,13 @@ object Main {
   def main(args: Array[String]) {
     println("To get help use the '-h' switch")
     if (args.isEmpty || args(0) == "-h") {
-      println(""" Usage scala Diskspace <path> [excludes...] " +
-        "e.g. Diskspace /home"  +
-        "e.g. Diskspace / --exclude=\"proc\"
+      println("""
+
+        Usage scala Diskspace <path> [excludes...]
+
+        e.g. Diskspace /home
+        e.g. Diskspace / --exclude="proc"
+
               """
       )
       sys.exit(0)

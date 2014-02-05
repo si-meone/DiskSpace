@@ -7,13 +7,15 @@ finding ways to get stuff natively in each OS
 
 Linux & MAC
  
-  du -d1 .
+  du -d1 .  
+  comma delimit: sudo du -d 1 / | tr "\\t" "," > output_mac_csv.txt
 
 Windows XP upward
 get this first for du
 http://technet.microsoft.com/en-us/sysinternals/bb896651
 
  du -c -q -l 1 c:\
+ comma delimit: du -c -q -l 1 c:\ /accepteula > output_windows_csv.txt
 
 all comes down to first level both show sizes on the left mainly in bytes and then name of folder.
 Seems they don't show file sizes so will need to some calculations.

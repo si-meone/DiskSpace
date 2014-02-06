@@ -70,7 +70,7 @@ object Main {
     }
 
     val path = if (args.length == 1) args(0) else "/"
-    val exclude = if (args.length > 2) args.drop(1).toList.mkString(" ") else "--exclude=/home/.ecryptfs --exclude=/proc"
+    val exclude = if (args.length > 1) args.drop(1).toList.mkString(" ") else "--exclude=/home/.ecryptfs --exclude=/proc"
     val color = false
     //    val path = args(0)
     //    val exclude = args(1)

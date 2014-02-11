@@ -1,7 +1,7 @@
 import sys.process._
 import collection.immutable.SortedMap
 
-class StorageUnit(val bytes: Long) extends Ordered[StorageUnit] {
+case class StorageUnit(val bytes: Long) extends Ordered[StorageUnit] {
   def inBytes = bytes
 
   def inKilobytes = bytes / (1024L)
@@ -22,14 +22,6 @@ class StorageUnit(val bytes: Long) extends Ordered[StorageUnit] {
 
   def *(scalar: Double): StorageUnit = new StorageUnit((this.bytes.toDouble * scalar).toLong)
 
-  override def equals(other: Any) = {
-    other match {
-      case other: StorageUnit =>
-        inBytes == other.inBytes
-      case _ =>
-        false
-    }
-  }
 
   override def compare(other: StorageUnit) =
     if (bytes < other.bytes) -1 else if (bytes > other.bytes) 1 else 0
@@ -59,27 +51,35 @@ object Main {
     if (args.isEmpty || args(0) == "-h") {
       println("""
 
-        Usage scala Diskspace <path> [excludes...]
+        Usage scala Diskspace <host> <path> [excludes...]
 
-        e.g. Diskspace /home
-        e.g. Diskspace / --exclude="proc"
+        e.g. Diskspace localhost /home/user
+        e.g. Diskspace user@server /home/user
+        e.g. Diskspace user@server /home/user --exclude="proc"
 
               """
       )
       sys.exit(0)
     }
-
-    val path = if (args.length == 1) args(0) else "/"
-    val exclude = if (args.length > 1) args.drop(1).toList.mkString(" ") else "--exclude=/home/.ecryptfs --exclude=/proc"
+    
+    val arg0 = args(0)
+    val host = if(args(0) != "localhost") s"ssh $arg0 " else "localhost"
+    val path = args(1)
+    val exclude = if (args.length > 2) args.drop(2).toList.mkString(" ") else ""
     val color = false
-    //    val path = args(0)
-    //    val exclude = args(1)
     //    val color = true
 
-    println(Console.BLINK + s" scanning $path")
-    println(Console.BLINK + s" ignoring $exclude")
+    println(s" scan on [$host]")
+    println(s" folder [$path]")
+    println(s" ignoring [$exclude]")
 
-    val result = s"sudo du $exclude -b -d 1 $path" #| "tr \"\\t\" \",\"\"" !!
+    val command1 = s"du -k -d 1 $path $exclude" 
+    val command2 = s"$host du -k -d 1 $path $exclude" 
+    val translate =  "tr \"\\t\" \",\"\"" 
+    val command = if (host == "localhost") s"$command1" #| s"$translate" else s"$command2" #| s"$translate"
+
+    println(s"Executing: [$command]")
+    val result = command!!
 
     val resultMap = result.split("\n").map(_ split ",").foldLeft(Map[Long, String]())((m, s) => m + (s(0).toLong -> s(1)))
 
@@ -88,7 +88,7 @@ object Main {
     if (color) {
       for ((k, v) <- resultMapSorted) println(Console.YELLOW + v + Console.WHITE + " -> " + Console.GREEN + new StorageUnit(k).toHuman + Console.RESET)
     } else {
-      for ((k, v) <- resultMapSorted) println(s" $v  ->  " + new StorageUnit(k).toHuman)
+      for ((k, v) <- resultMapSorted) println(s" $v  ->  " +  StorageUnit(k*1024).toHuman)
     }
 
   }
